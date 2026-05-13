@@ -10,6 +10,7 @@ the three losses into a single Ecosystem Collapse Index (ECI) raster.
 **Guide:** Prof. Ramachandra Prasad
 **Project type:** Independent Study, 12-week schedule
 **Repository:** <https://github.com/Nikhil-1920/ANI-Ecosystem-Services-Quantification>
+**Dataset bundle (Google Drive):** <https://drive.google.com/drive/u/0/folders/1U_ZS-m05GY28BANh-5pL70BR9DutI9Uh>
 
 ---
 
