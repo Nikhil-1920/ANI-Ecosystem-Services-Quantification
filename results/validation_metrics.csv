@@ -1,0 +1,20 @@
+block,metric,value
+Carbon loss (2001-2024),Total CO2e (GgCO2e),"1390.34  [95% CI 936.13, 1887.49]"
+Carbon loss (2001-2024),Total area (ha),"19502  [95% CI 12351, 27826]"
+Trend (CO2e),Mann-Kendall Z,-2.505
+Trend (CO2e),Mann-Kendall p,0.0122
+Trend (CO2e),Trend direction,decreasing
+Trend (CO2e),Sen slope (GgCO2e/yr),"-2.6683  [95% CI -5.2540, -0.6561]"
+Trend (area),Mann-Kendall Z,-3.349
+Trend (area),Mann-Kendall p,0.0008
+Trend (area),Sen slope (ha/yr),"-54.11  [95% CI -83.75, -20.44]"
+Cross-validation,n pixels,"2,314,513"
+Cross-validation,RMSE (Mg/ha),"168.76  [95% CI 168.45, 169.11]"
+Cross-validation,Bias (Mg/ha),"+152.59  [95% CI +152.27, +152.93]"
+Cross-validation,Pearson r,"0.2541  [95% CI 0.2495, 0.2590]"
+Cross-validation,R^2,"0.0645  [95% CI 0.0622, 0.0671]"
+Cross-validation,Lin CCC,"0.0213  [95% CI 0.0208, 0.0217]"
+Cross-validation,OLS slope / intercept,1.158  /  +142.74
+Cross-validation,RMA slope / intercept,4.559  /  -68.89
+Spatial autocorrelation,Moran's I (habitat delta),"0.3327  (p = 0.0050, n = 2,260)"
+Spatial autocorrelation,Moran's I (RUSLE delta),"0.2021  (p = 0.0050, n = 1,374)"

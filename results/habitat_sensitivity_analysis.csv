@@ -1,0 +1,31 @@
+k_value,land_cover,mean_habitat_quality
+0.1,Tree Cover,0.6151
+0.1,Grassland,0.1753
+0.1,Cropland,0.0828
+0.1,Built-up,0.0
+0.1,Bare / Sparse,0.1271
+0.1,Mangroves,0.5994
+0.25,Tree Cover,0.7958
+0.25,Grassland,0.287
+0.25,Cropland,0.0976
+0.25,Built-up,0.0
+0.25,Bare / Sparse,0.1448
+0.25,Mangroves,0.768
+0.5,Tree Cover,0.9183
+0.5,Grassland,0.3604
+0.5,Cropland,0.0995
+0.5,Built-up,0.0
+0.5,Bare / Sparse,0.1489
+0.5,Mangroves,0.8557
+0.75,Tree Cover,0.9608
+0.75,Grassland,0.3828
+0.75,Cropland,0.0998
+0.75,Built-up,0.0
+0.75,Bare / Sparse,0.1496
+0.75,Mangroves,0.8806
+0.9,Tree Cover,0.973
+0.9,Grassland,0.3886
+0.9,Cropland,0.0999
+0.9,Built-up,0.0
+0.9,Bare / Sparse,0.1497
+0.9,Mangroves,0.887

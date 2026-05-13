@@ -1,2 +1,32 @@
+# ANI Ecosystem Services — Git Ignore Patterns
+
+# Python & Environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.python-version
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Heavy Data Directories (Do Not Commit)
+data/raw/
 data/processed/
-data/processed/
+cache/
+
+# Geospatial Artefacts (Ignore massive rasters)
+*.tif
+*.tiff
+*.nc
+*.hdf
+
+# Outputs (Optional: uncomment below to also ignore all results and figures)
+# results/
+# figures/
+# presentation/

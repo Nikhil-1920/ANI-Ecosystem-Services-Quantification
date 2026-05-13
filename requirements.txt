@@ -1,0 +1,20 @@
+# ANI Ecosystem Services — Python Dependencies
+
+# Core Data Science Stack
+numpy==1.26.4
+pandas==2.2.1
+scipy==1.12.0
+
+# Geospatial Processing
+rasterio==1.3.9
+geopandas==0.14.3
+shapely==2.0.3
+
+# Data Visualization
+matplotlib==3.8.3
+seaborn==0.13.2
+plotly==5.19.0
+
+# Optional Dependencies (Recommended)
+notebook          # For interactive data exploration
+jupyterlab        # For advanced notebook management

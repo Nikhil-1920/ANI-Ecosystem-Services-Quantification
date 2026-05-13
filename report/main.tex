@@ -1,0 +1,1730 @@
+% =====================================================================
+%  Multi-Service Ecosystem Collapse Assessment of the Andaman & Nicobar
+%  Islands using Remote-Sensing Data Fusion (2001-2024)
+%
+%  Compile with:  pdflatex main.tex (twice for cross-references)
+% =====================================================================
+\documentclass[12pt,a4paper]{article}
+
+% ---- AMS math first, then Times-like font family --------------------
+% Order matters: newtxmath redefines \Bbbk and a few other blackboard
+% symbols, so amssymb must be loaded BEFORE newtxmath (or omitted —
+% newtxmath already provides every symbol amssymb does). Here we load
+% amsmath + amsfonts only, and let newtxmath supply the AMS symbols.
+\usepackage{amsmath,amsfonts}
+\usepackage{newtxtext,newtxmath}
+
+% ---- Geometry, spacing, language ------------------------------------
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage[english]{babel}
+\usepackage{microtype}
+\usepackage{parskip}
+
+% ---- Graphics, tables, math -----------------------------------------
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{siunitx}
+\sisetup{group-separator={,},group-minimum-digits=4}
+
+% ---- Colour palette: an environmental-sciences theme ----------------
+% Forest, leaf, sea, earth and accent reds chosen to fit a tropical
+% ecosystem-services report. Used for section headings, citation
+% links, caption labels and table-header rows.
+\usepackage{xcolor}
+\definecolor{forestgreen}{HTML}{1B5E20}
+\definecolor{leafgreen}  {HTML}{2E7D32}
+\definecolor{seablue}    {HTML}{0D47A1}
+\definecolor{skyblue}    {HTML}{1976D2}
+\definecolor{earthbrown} {HTML}{5D4037}
+\definecolor{accentred}  {HTML}{B71C1C}
+\definecolor{sand}       {HTML}{F1EAD7}
+\definecolor{lightleaf}  {HTML}{E8F1E4}
+
+% Caption labels in forest green and bold, plus a thin colour rule.
+\captionsetup{font=small,labelfont={bf,color=forestgreen},
+              labelsep=period,textfont=small}
+
+% ---- References (numbered, square brackets) -------------------------
+\usepackage[numbers,square,sort&compress]{natbib}
+
+% ---- Hyperlinks: coloured for an environmental-sciences look --------
+%   citecolor: leaf green (in-text [n] citations)
+%   linkcolor: forest green (TOC, section refs, fig/table refs)
+%   urlcolor : sea blue (external URLs and DOI links)
+\usepackage[colorlinks=true,
+            linkcolor=forestgreen,
+            citecolor=leafgreen,
+            urlcolor=seablue]{hyperref}
+
+% ---- Section header spacing & colour --------------------------------
+\usepackage{titlesec}
+\titleformat{\section}
+            {\Large\bfseries\color{forestgreen}}
+            {\thesection}{1em}{}
+\titleformat{\subsection}
+            {\large\bfseries\color{leafgreen}}
+            {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+            {\normalsize\bfseries\color{earthbrown}}
+            {\thesubsubsection}{1em}{}
+
+\graphicspath{{figures/}}
+
+% ---- Table-row colouring (booktabs-compatible) ----------------------
+\usepackage{colortbl}
+\arrayrulecolor{forestgreen!60}
+
+% =====================================================================
+\begin{document}
+
+% ---- TITLE PAGE -----------------------------------------------------
+\begin{titlepage}
+\centering
+\vspace*{1.0cm}
+{\color{forestgreen}\rule{\linewidth}{1.5pt}}\\[0.2cm]
+{\color{leafgreen}\rule{\linewidth}{0.5pt}}\\[0.8cm]
+{\Large\bfseries\color{forestgreen}
+Quantifying Changes in Ecosystem Services in the\\
+Andaman \& Nicobar Islands due to Forest Conversion\\
+using Open Global Carbon and Biomass Datasets\par}
+\vspace{0.6cm}
+{\color{leafgreen}\rule{\linewidth}{0.5pt}}\\[0.2cm]
+{\color{forestgreen}\rule{\linewidth}{1.5pt}}\\[1.0cm]
+{\large\itshape An Independent Study Report\par}
+\vspace{0.4cm}
+{\normalsize Submitted in partial fulfilment of the requirements of the course\par}
+\vspace{1.8cm}
+{\large\bfseries\color{earthbrown} Submitted by\par}
+\vspace{0.3cm}
+{\large Nikhil Singh\par}
+{\normalsize (damanimalay@gmail.com)\par}
+\vspace{0.4cm}
+{\large Mihir Chaudhary\par}
+\vspace{1.2cm}
+{\large\bfseries\color{earthbrown} Under the Guidance of\par}
+\vspace{0.3cm}
+{\large Prof. Ramachandra Prasad\par}
+\vfill
+{\normalsize\color{seablue}\today\par}
+\vspace{0.5cm}
+\end{titlepage}
+
+% ---- ABSTRACT -------------------------------------------------------
+\section*{Abstract}
+This report quantifies the multifunctional collapse of ecosystem services
+across the Andaman \& Nicobar Islands (ANI) between 2001 and 2024 by
+fusing seven independently produced earth-observation products: ESA
+WorldCover 2021 land cover, the Global Forest Watch (GFW) annual
+forest-loss raster, the GEDI Level-4B aboveground biomass density grid,
+the Saatchi pan-tropical biomass map (independent cross-validation
+reference), CHIRPS annual precipitation, SoilGrids clay/silt fractions
+and the SRTM 30 m digital elevation model. Three biophysical ecosystem
+services---carbon storage, soil retention and habitat quality---are
+modelled at 30 m using a combination of GFW $\times$ GEDI carbon
+accounting, the Revised Universal Soil Loss Equation (RUSLE) and an
+InVEST-style threat-weighted Habitat Quality Index. The three service
+losses are normalised, summed and thresholded to produce an Ecosystem
+Collapse Index (ECI) identifying pixels where every service is
+simultaneously degraded. Over 2001--2024 the islands lost approximately
+\SI{19502}{\hectare} of forest, releasing \SI{1390}{\giga\gram} of
+CO\textsubscript{2}-equivalent (95\,\% CI 936--1887), with a
+statistically significant declining annual trend (Mann--Kendall
+$Z=-2.51$, $p=0.012$; Sen's slope $-2.67$ Gg\,CO$_2$e\,yr$^{-1}$). RUSLE
+soil-loss rates vary by three orders of magnitude across land covers,
+from a median of \SI{2.8}{\tonne\per\hectare\per\year} under closed
+canopy to \SI{425}{\tonne\per\hectare\per\year} on bare/sparse surfaces.
+Spatial autocorrelation (Moran's $I=0.33$, $p=0.005$ on habitat-quality
+deltas; $I=0.20$, $p=0.005$ on RUSLE deltas) confirms that degradation
+is spatially clustered rather than random. A supplementary module
+quantifies four further services---coastal protection by mangroves,
+freshwater yield, pollination suitability and soil organic carbon (SOC)
+loss---raising the projected business-as-usual economic damage for 2040
+from a lower-bound \$502\,million to an upper-bound \$594\,million. The
+combined evidence indicates a regionally contained but spatially
+clustered collapse signal that warrants targeted intervention rather
+than uniform island-wide management.
+
+\bigskip\noindent\textbf{Keywords:} Ecosystem services, RUSLE, habitat
+quality, Ecosystem Collapse Index, GEDI L4B, Andaman \& Nicobar Islands,
+Mann--Kendall, Sen's slope, Moran's I, remote sensing.
+
+\clearpage
+\tableofcontents
+\clearpage
+
+% ---- List of Figures and Tables -------------------------------------
+% 25 figures + 4 tables — a navigational index up front is helpful for
+% a long report. Both lists adopt the same forest-green colouring as
+% the rest of the section headings.
+\renewcommand{\listfigurename}{List of Figures}
+\renewcommand{\listtablename}{List of Tables}
+\listoffigures
+\addcontentsline{toc}{section}{List of Figures}
+\bigskip
+\listoftables
+\addcontentsline{toc}{section}{List of Tables}
+\clearpage
+
+% =====================================================================
+% 1. INTRODUCTION
+% =====================================================================
+\section{Introduction}
+
+Tropical island ecosystems concentrate disproportionate biological,
+hydrological and biogeochemical value into very small areas, and their
+exposure to coupled drivers of change---climate variability, land-use
+conversion, coastal storms, sediment redistribution---makes them among
+the most informative natural laboratories for studying multifunctional
+ecosystem degradation. The Andaman \& Nicobar archipelago, comprising
+roughly \SI{8249}{\square\kilo\metre} of land scattered across the
+eastern Bay of Bengal, contains some of the most intact closed-canopy
+tropical forest in South Asia together with a globally significant
+mangrove belt, yet the islands have nevertheless experienced
+measurable forest loss, coastal disturbance and infrastructure
+expansion through the two decades for which a coherent
+satellite-observation record exists. Quantifying how much ecosystem
+service has actually been lost, where the losses are most concentrated,
+whether they aggregate into multifunctional collapse and what the
+economic implications might be is therefore both scientifically
+tractable and policy-relevant.
+
+\subsection{Literature Survey}
+
+The classical framework for quantifying soil erosion at landscape
+scale is the Revised Universal Soil Loss Equation \citep{renard1997}
+that decomposes annual soil loss into the product of a rainfall
+erosivity factor (R), a soil erodibility factor (K), a slope-length
+and steepness factor (LS), a cover-management factor (C) and a
+support-practice factor (P). Although the equation was originally
+calibrated on rectangular plots in the United States, subsequent
+pan-tropical and pan-European applications, notably the high-resolution
+RUSLE-based products of \citet{panagos2015} and the global
+extrapolation of \citet{borrelli2020}, have demonstrated that the
+empirical structure transfers acceptably to remote-sensing inputs when
+the factor lookup tables are re-parameterised for tropical conditions.
+The C-factor lookup adopted in this study draws on the same
+\citet{borrelli2020} tropical defaults, with mangrove and herbaceous
+wetland values supplemented from \citet{wischmeier1978}.
+
+Aboveground biomass mapping has shifted decisively in the past five
+years from synthetic-aperture-radar-only or optical-only products to
+spaceborne lidar. The Global Ecosystem Dynamics Investigation (GEDI)
+mission \citep{dubayah2020} provides full-waveform observations on the
+International Space Station between $\pm 51.6^\circ$ latitude, and its
+Level-4B (L4B) gridded product reports mean aboveground biomass
+density (AGBD) at 1 km using random-forest models calibrated against
+field plots \citep{dubayah2022}. Cross-validation against the older,
+GLAS-calibrated 1 km map of \citet{saatchi2011} reveals systematic
+disagreement in dense closed-canopy regions of Africa, South-East Asia
+and tropical Asia, with GEDI L4B consistently estimating higher AGBD;
+this is documented across several inter-comparison studies and is
+attributed both to vintage differences (2003--2007 versus 2019--2023)
+and to the conservative nature of the Saatchi map in tall canopies.
+
+Annual deforestation has been operationally tracked since the
+publication of the global, 30 m Hansen forest-change product
+\citep{hansen2013}, which combines Landsat-derived tree-cover-loss
+and annual loss-year layers and is updated by World Resources
+Institute via the Global Forest Watch platform. Carbon accounting
+applications routinely multiply Hansen lossyear pixels by a baseline
+biomass density to estimate annual emissions, with several
+international synthesis papers \citep{harris2021} demonstrating that
+the approach captures the broad national patterns observed by
+independent inventories. The trend-detection literature relies almost
+universally on the non-parametric Mann--Kendall test
+\citep{mann1945, kendall1975} together with the Theil--Sen slope
+estimator \citep{theil1950, sen1968} because annual deforestation is
+episodic, non-normal and heavily influenced by individual cyclone or
+fire years.
+
+Habitat quality at landscape scale is most commonly modelled with the
+InVEST framework \citep{sharp2020}, which assigns each land-cover
+class an intrinsic habitat suitability between 0 and 1 and degrades
+it as a function of distance to user-specified threats (roads,
+settlements, agricultural edges). InVEST's underlying mathematics
+follows the half-saturation degradation model of \citet{nelson2009},
+and its outputs have been benchmarked against species-distribution
+models in tropical settings by \citet{terrado2016}. In this report a
+simplified InVEST-style index is computed directly on the ESA
+WorldCover 2021 land-cover map without an external threat layer, on
+the grounds that the ANI archipelago has relatively few high-impact
+linear infrastructure features outside the south Andaman urban
+cluster.
+
+Multi-service synthesis indices that aggregate independently modelled
+service losses into a single decision-relevant raster have a longer
+history in the freshwater literature, but the conceptual approach used
+here---normalise each service to $[0,1]$, sum the normalised harms
+and threshold at the 95\textsuperscript{th} percentile to identify
+``triple-collapse'' pixels---is consistent with the multi-criteria
+hotspot synthesis used by \citet{egoh2008} and the bundle/anti-bundle
+analysis of \citet{rao2018}. Spatial autocorrelation in the resulting
+hotspot raster is quantified using the global Moran's $I$ statistic
+\citep{moran1950} with a queen-case 3$\times$3 neighbourhood and a
+permutation-based test of significance, following the spatial-
+econometrics conventions established for ecosystem-service mapping in
+\citet{anselin1995}.
+
+Cross-validation of remote-sensing biomass products requires more than
+a Pearson correlation, because two products can rank pixels similarly
+yet sit on completely different absolute scales. \citet{lin1989}
+introduced the Concordance Correlation Coefficient (CCC) that
+multiplies Pearson's $r$ by a bias-correction factor measuring the
+displacement of the regression line from the 1:1 diagonal; products
+that disagree systematically yield very low CCC even when $r$ is
+moderate. Reduced Major Axis (RMA) regression \citep{warton2006}
+complements ordinary least squares by treating both variables as
+having error, which is the realistic assumption when validating one
+remote-sensing model against another rather than against ground
+truth. Bootstrap confidence intervals on RMSE, bias, $r$ and CCC are
+standard practice in modern biomass cross-validation
+\citep{efron1993}.
+
+The economic translation of biophysical losses into a single
+willingness-to-pay or social-cost figure typically applies the United
+States Environmental Protection Agency social cost of CO$_2$
+\citep{epa2023} multiplied by the CO$_2$-equivalent emissions
+estimate, with the well-known caveat that any single SCC figure
+captures only one decision-maker's value function. For coastal
+protection, the global willingness-to-pay calculations of
+\citet{menendez2020} provide a defensible per-hectare per-year
+mangrove buffering value, while soil-organic-carbon losses from
+forest-to-cropland conversion are summarised by the meta-analytic
+factor of \citet{don2011}.
+
+\subsection{Objectives of the Study}
+
+The objectives of this study are: (i) to assemble a coherent
+multi-service remote-sensing dataset for the Andaman \& Nicobar
+archipelago at 30 m spatial resolution and to confirm that the
+constituent rasters are mutually projectable, mutually clippable and
+mutually comparable through the 2001--2024 reference period; (ii) to
+quantify annual carbon-equivalent losses from forest deforestation by
+spatially intersecting the GFW annual forest-loss layer with the GEDI
+L4B aboveground biomass density grid and to test the resulting time
+series for monotonic trends using the Mann--Kendall and Theil--Sen
+statistics; (iii) to compute pixel-level RUSLE soil-loss rates and
+their land-cover-class statistics, including the counterfactual delta
+relative to a forested baseline; (iv) to estimate an InVEST-style
+habitat quality index per pixel and to summarise its distribution per
+land-cover class, including the change relative to a pre-disturbance
+baseline; (v) to synthesise the three service losses into a single
+Ecosystem Collapse Index, identify triple-collapse hotspots at the
+95\textsuperscript{th} percentile, and test the resulting hotspot
+pattern for spatial autocorrelation using a permutation-based Moran's
+$I$; (vi) to cross-validate the GEDI L4B biomass values against the
+independent Saatchi 2011 pan-tropical product on the forest-only
+pixel set using Pearson's $r$, the coefficient of determination,
+Lin's CCC, RMSE, bias, OLS regression and RMA regression with
+bootstrap-derived confidence intervals; (vii) to extend the analysis
+with a supplementary module covering coastal protection by
+mangroves, Budyko-style freshwater yield, Lonsdorf-style pollination
+suitability and SoilGrids-derived organic-carbon loss; and (viii) to
+translate the combined biophysical losses into projected economic
+damages to 2040 under business-as-usual, conservation and escalation
+scenarios.
+
+\subsection{Study Area}
+
+The Andaman \& Nicobar Islands form an arcuate Union Territory of
+India scattered between approximately $6.5^\circ$N and $13.5^\circ$N
+in the eastern Bay of Bengal, with the Andaman group in the north
+and the Nicobar group separated from it by the ten-degree channel.
+Total land area is approximately \SI{8249}{\square\kilo\metre},
+of which closed tropical broadleaf forest accounts for roughly
+\SI{6390}{\square\kilo\metre} (Tree Cover ESA class 10) and mangrove
+forest a further \SI{590}{\square\kilo\metre} (ESA class 95). The
+remaining surface comprises grassland, scattered cropland, built-up
+settlements concentrated around Port Blair, and bare or sparse
+substrate primarily on the more arid Nicobar interior. Annual mean
+precipitation in the CHIRPS record is \SI{3400}{\milli\metre} on Tree
+Cover and exceeds \SI{3840}{\milli\metre} on the Mangrove fringe, and
+the SRTM 30 m DEM shows that the majority of the archipelago lies
+below \SI{100}{\metre} elevation, with the dominant relief being the
+Saddle Peak ridge in north Andaman and a smaller central ridge on
+Great Nicobar. The islands have experienced major natural
+disturbances during the study period---most notably the December 2004
+Indian Ocean earthquake and tsunami---and these disturbances are
+reflected in the GFW forest-loss series and the carbon-loss spikes
+documented in Section~\ref{sec:carbon}.
+
+% =====================================================================
+% 2. MATERIALS AND METHODS
+% =====================================================================
+\section{Materials and Methods}
+
+\subsection{Data Used}
+\label{sec:data}
+
+Seven primary remote-sensing rasters were used in this study, each
+clipped to the ANI administrative boundary, reprojected to UTM Zone
+46N (EPSG:32646) and resampled to a common 30 m pixel grid where
+necessary. Table~\ref{tab:datasets} summarises the data sources,
+their native resolutions and the post-processing applied. The
+processed copies are stored in \texttt{data/processed/} and are
+read by every analysis script.
+
+\begin{table}[H]
+\centering
+\caption{Earth-observation and ancillary datasets used in this study.}
+\label{tab:datasets}
+\small
+\begin{tabular}{p{4.0cm} p{3.3cm} p{1.8cm} p{5.5cm}}
+\toprule
+\rowcolor{forestgreen!15}
+\textbf{Dataset} & \textbf{Source} & \textbf{Native res.} & \textbf{Use}\\
+\midrule
+ESA WorldCover 2021 & ESA Climate Change Initiative & 10 m & Land-cover stratification, RUSLE C-factor lookup, InVEST habitat suitability, masking. \\
+GFW Forest Loss 2001--2023 & Hansen / WRI Global Forest Watch & 30 m & Annual deforestation events, drives carbon-loss accounting. \\
+GFW Tree Cover 2000 baseline & Hansen / WRI GFW & 30 m & Pre-2001 canopy reference. \\
+GEDI L4B AGBD & NASA GEDI mission v2.1 & 1 km (gridded) & Aboveground biomass density baseline; carbon-stock input. \\
+Saatchi 2011 Pan-Tropical AGB & \citet{saatchi2011} & 1 km & Independent cross-validation reference. \\
+CHIRPS annual precipitation & UCSB Climate Hazards Center & $\sim$5 km & RUSLE R-factor (rainfall erosivity), freshwater-yield module. \\
+SoilGrids Clay+Silt fraction & ISRIC SoilGrids v2 (via GEE) & 250 m & RUSLE K-factor proxy and SOC baseline. \\
+SRTM 30 m DEM & USGS / NASA SRTM v3 & 30 m & Slope-length and steepness (LS) factor, coastal-elevation factor. \\
+ANI administrative boundary & Survey of India shapefile & vector & Region-of-interest clipping. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All rasters were resampled to the ESA WorldCover 30 m grid using
+nearest-neighbour interpolation for the categorical layers (ESA,
+GFW lossyear) and bilinear interpolation for the continuous layers
+(GEDI, Saatchi, CHIRPS, SoilGrids, SRTM). Nodata cells were
+propagated through every analytical step using NumPy NaN handling so
+that downstream statistics never mistake ocean for unmodelled land.
+
+\subsection{Carbon-Loss Accounting from GFW $\times$ GEDI}
+\label{sec:methods-carbon}
+
+Annual carbon-equivalent losses were computed by intersecting the
+GFW \emph{lossyear} raster $L(x,y)\in\{0,1,\dots,23\}$ with the GEDI
+L4B biomass density grid $B(x,y)$ in Mg\,ha$^{-1}$. For each year
+$t$ from 2001 to 2023 a binary mask $M_t = \mathbb{1}\{L = t-2000\}$
+was extracted and the lost aboveground biomass in that year was
+computed pixel-by-pixel as
+
+\[
+B_t(x,y) \;=\; M_t(x,y) \,\cdot\, B(x,y) \,\cdot\, 0.09
+\]
+
+with the constant 0.09 converting per-hectare biomass density to
+per-pixel biomass for 30 m pixels. Aboveground carbon $C_t$ was
+obtained by multiplying $B_t$ by 0.47, the standard biomass-to-carbon
+fraction \citep{westlake1963}, and converted to CO$_2$ equivalent by
+multiplying by $44/12$:
+
+\[
+\text{CO}_2\text{e}_t \;=\; 0.47 \cdot \frac{44}{12} \cdot B_t
+\;=\; 1.723 \cdot B_t .
+\]
+
+Aggregating over $(x,y)$ gives the annual time series shown in
+Figure~\ref{fig:trend}. The cumulative gain CO$_2$e from the GFW
+\emph{gain} layer is computed in the same way using a forested-pixel
+assumption of \SI{96.7}{\mega\gram\of\dryMatter\per\hectare} for
+recovering canopy, and the net balance time series is included in
+the carbon-results CSV. The 24-year total CO$_2$e loss together with
+its 95\,\% confidence interval is reported in
+Table~\ref{tab:headline}.
+
+\subsection{Trend Detection: Mann--Kendall and Theil--Sen}
+
+The annual CO$_2$e and annual lost-area time series were tested for
+monotonic trends using the non-parametric Mann--Kendall (MK) test
+\citep{mann1945, kendall1975} with the tie-corrected variance
+$\sigma_S^2 = [n(n-1)(2n+5) - \sum_j t_j(t_j-1)(2t_j+5)] / 18$ and a
+continuity correction giving
+
+\[
+Z = \begin{cases}
+(S-1)/\sigma_S, & S > 0 \\
+0, & S = 0 \\
+(S+1)/\sigma_S, & S < 0 .
+\end{cases}
+\]
+
+The Theil--Sen median slope was computed as the median of all
+pairwise slopes $(y_j - y_i)/(t_j - t_i)$ for $i<j$, with the
+95\,\% confidence interval derived from the Hollander--Wolfe
+normal approximation $c_\alpha = 1.96\sqrt{\sigma_S^2}$ and the
+sorted-slope positions $\lfloor (N_{\text{pairs}}-c_\alpha)/2\rfloor$
+and $\lceil (N_{\text{pairs}}+c_\alpha)/2\rceil$. The Theil--Sen line
+is anchored at the data centroid $(\widetilde{t},\widetilde{y})$ for
+plotting (Figure~\ref{fig:trend}); the slope-uncertainty ribbon
+shown in the figure visualises slope-CI lines pivoting through this
+centroid and is therefore a slope envelope rather than a predictive
+interval.
+
+\subsection{RUSLE Soil-Loss Modelling}
+\label{sec:methods-rusle}
+
+Annual soil loss $A$ in t\,ha$^{-1}$\,yr$^{-1}$ was computed as
+$A = R\cdot K\cdot LS\cdot C\cdot P$. The R-factor was derived from
+CHIRPS annual precipitation using the regional regression $R = 81.5 +
+0.38\,P_{annual}$ \citep{panagos2015}. The K-factor was approximated
+from the SoilGrids clay+silt fraction using the simplified relation
+$K = 0.005 + 0.0006(\text{clay}+\text{silt})$, clipped to a plausible
+physical range of $[0.005, 0.060]$. The LS-factor was computed from
+the SRTM DEM using the \citet{moore1992} flow-accumulation
+formulation with a steep-slope cap of 50 to avoid cliff-edge
+artefacts. The C-factor was a per-class lookup
+(Table~\ref{tab:cfactor}) drawing on the tropical defaults of
+\citet{borrelli2020}. The P-factor was set uniformly to 1.0 (no
+active management practice information available at 30 m). Pixel
+losses were aggregated by ESA WorldCover class to produce
+Table~\ref{tab:rusle-by-class} and the violin distribution in
+Figure~\ref{fig:rusle-violin}. The four component factors are
+visualised over both island groups in
+Figure~\ref{fig:rusle-factors}, where the K-factor is rendered on the
+high-contrast \texttt{cividis} colormap with 2--98\,\% percentile
+stretch and the C-factor on \texttt{magma\_r} with a log-norm so the
+98\,\% tree-cover background does not visually swamp the rare
+high-erosion cropland and bare patches.
+
+\begin{table}[H]
+\centering
+\caption{RUSLE C-factor lookup applied per ESA WorldCover class
+\citep{borrelli2020,wischmeier1978}.}
+\label{tab:cfactor}
+\small
+\begin{tabular}{l l c}
+\toprule
+\rowcolor{forestgreen!15}
+\textbf{Class code} & \textbf{Land cover} & \textbf{C-factor} \\
+\midrule
+10 & Tree cover     & 0.001 \\
+20 & Shrubland      & 0.035 \\
+30 & Grassland      & 0.060 \\
+40 & Cropland       & 0.280 \\
+50 & Built-up       & 0.000 \\
+60 & Bare / sparse  & 0.450 \\
+90 & Wetland (herb.)& 0.020 \\
+95 & Mangroves      & 0.010 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{InVEST-Style Habitat Quality Index}
+\label{sec:methods-habitat}
+
+Each ESA WorldCover class was assigned an intrinsic habitat
+suitability score $H_c \in [0,1]$ drawing on the InVEST tropical
+defaults of \citet{sharp2020}: Tree cover 1.00, Mangroves 0.90,
+Shrubland 0.50, Wetland 0.45, Grassland 0.38, Bare 0.15, Cropland
+0.10, Built-up 0.00. The score was applied per pixel and modulated by
+a degradation function $D(x,y)$ that decays linearly with distance
+from threat sources (settlements, infrastructure edges) where such
+features were derivable from the land-cover map itself. The final
+habitat quality $Q(x,y)$ was
+
+\[
+Q(x,y) = H_c(x,y) \cdot \left[1 - \frac{D(x,y)^k}{D(x,y)^k + D_{1/2}^k}\right]
+\]
+
+with the half-saturation constant $D_{1/2}$ set to 0.5 and the shape
+parameter $k=2.5$, following the original InVEST default. The change
+$\Delta Q$ relative to a pre-disturbance counterfactual---in which
+all currently disturbed pixels are reassigned to their pre-loss tree
+cover or mangrove state---is the diagnostic used in the synthesis.
+Per-class distributions are visualised in
+Figure~\ref{fig:hq-violin}.
+
+\subsection{Ecosystem Collapse Index (ECI)}
+\label{sec:methods-eci}
+
+Three normalised harm layers were combined into a single ECI raster.
+The habitat harm layer $h_{\text{hab}}$ was $-\Delta Q$ clipped to
+$[0,1]$, the soil harm layer $h_{\text{soil}}$ was the log-transformed
+RUSLE delta normalised by its 99.9\textsuperscript{th} percentile,
+and the carbon harm layer $h_{\text{C}}$ was a binary flag indicating
+any GFW forest-loss event during 2001--2023. The combined index was
+
+\[
+\text{ECI}(x,y) = \frac{h_{\text{hab}}(x,y) + h_{\text{soil}}(x,y)
+                       + h_{\text{C}}(x,y)}{3}
+\]
+
+producing values in $[0,1]$. Pixels exceeding the
+95\textsuperscript{th} percentile of the impacted-pixel distribution
+were flagged as triple-collapse hotspots (Figure~\ref{fig:eci-map};
+Figure~\ref{fig:hexbin}). Global Moran's $I$ was computed on the
+binary hotspot mask with a queen-case 3$\times$3 neighbourhood
+($w_{ij}=1/8$ for adjacent cells, zero elsewhere) using the
+convolution formulation, with a 199-replicate permutation null
+distribution providing the empirical $p$-value.
+
+\subsection{Cross-Validation: GEDI L4B versus Saatchi 2011}
+\label{sec:methods-cv}
+
+The independent Saatchi pan-tropical AGB map was used to cross-
+validate the GEDI L4B aboveground biomass values pixel-by-pixel after
+restricting both rasters to forest-only land-cover classes
+(ESA 10 Tree cover and ESA 95 Mangroves). Restriction is essential
+because Saatchi is a forest-only product whose nominal values over
+non-forest pixels are uninformative, while GEDI L4B's gap-filled grid
+returns numerical estimates everywhere. With \num{2314513} forest
+pixels in the overlap, six agreement metrics were computed: Pearson's
+$r$, the coefficient of determination $R^2$, Lin's Concordance
+Correlation Coefficient $\rho_c$ \citep{lin1989}, RMSE, bias
+(GEDI~$-$~Saatchi) and mean absolute error. Two regression lines were
+fitted: ordinary least squares with Saatchi as predictor, and Reduced
+Major Axis regression $\hat{b}_{RMA} = \mathrm{sign}(r)\,\sigma_y/
+\sigma_x$ \citep{warton2006} which is the appropriate fit when both
+variables carry error. Bootstrap 95\,\% confidence intervals on every
+metric were derived from 500 resamples of the forest-pixel subsample.
+
+\subsection{Supplementary Ecosystem-Service Modules}
+\label{sec:methods-supp}
+
+Four lightweight supplementary services were computed to bracket
+the lower-bound carbon-plus-soil-plus-habitat damage figure. Coastal
+protection was modelled as a mangrove buffer index $CPI =
+\mathbb{1}_{\text{mangrove}} \cdot f_{\text{elev}} \cdot f_{\text{coast}}$
+where $f_{\text{elev}}$ decays linearly from 1 below \SI{10}{\metre}
+elevation to 0 at \SI{30}{\metre} and $f_{\text{coast}}$ decays
+linearly from 1 within \SI{1}{\kilo\metre} of water to 0 at
+\SI{5}{\kilo\metre}, following \citet{menendez2020}. The per-hectare
+value was set at \$2240/ha/yr (10\,\% of the global Menendez et al.
+willingness-to-pay benchmark, retained as a conservative ANI-scaled
+lower bound), and the 15-year net present value of high-value
+($CPI > 0.5$) area lost was computed using the annuity factor
+$a = (1 - (1+r)^{-n})/r$ at $r=0.04$, $n=15$ giving $a \approx 11.12$
+(corrected from a previous undiscounted version). Freshwater yield
+was estimated as $Y = P\cdot(1-\kappa_c)$ where $\kappa_c$ is a
+class-specific evapotranspiration coefficient drawn from
+\citet{zhang2001,sun2006}. Pollination suitability followed the
+Lonsdorf-style index $S = \sqrt{F\cdot N}$ with class-specific
+floral $F$ and nesting $N$ scores from the tropical defaults of
+\citet{koh2016}. Baseline soil organic carbon was modelled hybridly:
+where the SoilGrids clay+silt raster has valid data, a pedotransfer
+formula $\text{SOC} = 40 + 0.5\,(\text{clay}+\text{silt})$ was
+applied; where SoilGrids reports zero (a coarse-to-fine resampling
+artefact), a literature class-mean SOC was used following
+\citet{powers2018,donato2011}. SOC loss from deforested pixels was
+computed using the Don et al. \citep{don2011} 25\,\% loss factor and
+converted to CO$_2$e and US dollar damage at the US EPA 2023 social
+cost of carbon of \$51/tCO$_2$.
+
+\subsection{Economic Forecasting to 2040 and 2060}
+
+The 2040 business-as-usual economic damage forecast combined the
+historic deforestation velocity (\SI{812.6}{\hectare\per\year}, the
+average annual loss across 2001--2023) with three damage categories:
+CO$_2$e damage at the social cost of carbon (\$51/tCO$_2$), dredging
+cost from sediment loss (\$5/tonne removed) and ecosystem
+habitat-replacement cost (\$3000/ha for tropical forest). The
+upper-bound version added the coastal-protection NPV and SOC damage
+from the supplementary module. Three scenarios were extended to 2060:
+a Conservation scenario assuming zero new loss after 2024, a
+Business-As-Usual scenario continuing the historic velocity, and an
+Escalation scenario doubling the velocity.
+
+% =====================================================================
+% 3. RESULTS AND DISCUSSION
+% =====================================================================
+\section{Results and Discussion}
+
+\subsection{GEDI Aboveground Biomass Baseline}
+\label{sec:carbon-baseline}
+
+Before the loss budget could be computed, an aboveground biomass (AGB)
+baseline had to be established at every land pixel of the archipelago.
+The NASA GEDI Level-4B 1\,km gridded AGB density product served as
+this baseline because it is the only spaceborne lidar product that
+directly measures the vertical canopy structure responsible for the
+bulk of the biomass signal, and because its random-forest model is
+calibrated against field plots at the footprint level rather than
+relying on optical proxies. The product was bilinearly resampled to
+the 30\,m ESA WorldCover grid so that every analytical pixel had a
+biomass estimate.
+
+Figure~\ref{fig:agb-baseline} renders the resulting biomass surface
+separately for the Andaman and Nicobar groups, overlaid with the GFW
+forest-gain pixels (dilated $\times 2$ for visibility). The Andaman
+mean AGB is 208 Mg\,ha$^{-1}$ with a 95\textsuperscript{th} percentile
+of 336 Mg\,ha$^{-1}$; the Nicobar mean is 184 Mg\,ha$^{-1}$ with a
+95\textsuperscript{th} percentile of 322 Mg\,ha$^{-1}$. The
+spatial pattern is broadly what one would expect for an undisturbed
+tropical archipelago: the densest biomass is on the central spine of
+North and Middle Andaman, on the Saddle Peak ridge, and on the deep
+interior of Great Nicobar; the lowest values occur on the coastal
+fringe (mangrove-dominated, lower per-pixel AGB than upland tree
+cover), on the small Nicobar islets where canopy structure is more
+fragmented, and around the few inhabited settlements. Forest-gain
+patches (magenta dots) are scattered preferentially along the eastern
+coast of Middle Andaman---a known regeneration corridor following the
+2004 tsunami---and on the southern tip of Great Nicobar.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{carbon/agb_gedi_baseline_map.png}
+\caption{GEDI L4B aboveground biomass density (Mg\,ha$^{-1}$) over the
+Andaman (left) and Nicobar (right) island groups, rendered on a green
+sequential ramp. Forest-gain pixels from the GFW 2000--2012 product,
+dilated by a factor of two for visibility, are overlaid in magenta.
+Inset boxes show the mean AGB and the 95\textsuperscript{th}
+percentile for each group.}
+\label{fig:agb-baseline}
+\end{figure}
+
+This biomass baseline drives every downstream carbon-loss calculation
+in Section~\ref{sec:carbon}, and the absolute scale of the GEDI L4B
+estimates is independently cross-validated against the Saatchi 2011
+product in Section~\ref{sec:cv-results} below. The reader should bear
+in mind that any uncertainty in the GEDI baseline propagates
+multiplicatively into the carbon-loss figure: a 10\,\% systematic
+overestimate of mean AGB inflates the 24-year CO$_2$e loss by the
+same 10\,\%. The bootstrap 95\,\% confidence interval reported below
+(936--1887 Gg CO$_2$e) is dominated by the spatial variance of the
+biomass field rather than by uncertainty in the temporal
+deforestation count.
+
+\subsection{Carbon-Loss Trajectory and Trend Significance}
+\label{sec:carbon}
+
+Across the 24-year analysis window the archipelago lost
+approximately \SI{19502}{\hectare} of forest, equivalent to
+\SI{1390}{\giga\gram} CO$_2$e (95\,\% bootstrap CI 936--1887). The
+annual time series is visibly episodic
+(Figure~\ref{fig:trend}): three pronounced spikes occur in 2005
+($\sim$\SI{180}{\giga\gram}), 2008 ($\sim$\SI{125}{\giga\gram}) and
+2020 ($\sim$\SI{160}{\giga\gram}), separated by years of low loss.
+The Mann--Kendall test on the annual CO$_2$e series returns
+$Z=-2.51$, $p=0.0122$ with the decreasing-trend direction, and
+Theil--Sen estimates a slope of
+$-2.67$ Gg\,CO$_2$e\,yr$^{-1}$ (95\,\% CI $-5.25$ to $-0.66$). The
+parallel test on annual lost area gives an even stronger signal,
+$Z=-3.35$, $p=0.0008$, Sen slope $-54.1$ ha\,yr$^{-1}$ (95\,\% CI
+$-83.8$ to $-20.4$). The slope confidence interval excludes zero in
+both cases, so the statistical declining trend is robust to the
+specification.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{validation/carbon_loss_trend_with_ci.png}
+\caption{Annual CO$_2$e loss in ANI between 2001 and 2024 (red bars),
+Theil--Sen median slope (dashed blue) and the slope-envelope 95\,\%
+confidence band (light blue, clipped at zero because CO$_2$e loss is
+strictly non-negative). The Mann--Kendall test annotation in the
+upper-left reports a statistically significant declining trend
+($Z=-2.51$, $p=0.012$). The three large spikes around 2005, 2008 and
+2020 dominate the trend's anchor points.}
+\label{fig:trend}
+\end{figure}
+
+A companion display of the same series with cumulative emissions
+overlaid as a green twin-axis curve and broken down by within-year
+hectares of forest loss is shown in
+Figure~\ref{fig:carbon-timeseries}. The cumulative curve is what
+matters for the policy question of \emph{how much carbon has already
+left the atmosphere-canopy reservoir}: every single spike adds a
+permanent step that the subsequent quieter years do not erase, so by
+the end of 2024 the islands sit at a cumulative emission of
+$\approx$\SI{1390}{\giga\gram} CO$_2$e regardless of the declining
+annual trend in the bar series. This is a crucial framing distinction
+because a casual reader of the trend figure could conclude that the
+crisis is ``getting better''; the cumulative perspective makes clear
+that the standing debt continues to accrue.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{carbon/carbon_annual_loss_timeseries.png}
+\caption{Annual forest loss area (left axis, red bars) and the
+cumulative CO$_2$e emission curve (right axis, green line) for ANI
+2001--2024. Despite the visibly declining annual loss series, the
+cumulative curve continues to climb monotonically, ending at
+$\approx$ 1390 Gg CO$_2$e of debt against the atmosphere by 2024.}
+\label{fig:carbon-timeseries}
+\end{figure}
+
+It is important not to over-interpret the declining MK trend, however.
+The annual series has only 24 observations, of which three (2005,
+2008, 2020) account for nearly 40\,\% of the cumulative loss. The
+2005 spike is consistent with documented post-2004-tsunami
+reconstruction and incidental clearing pulses, the 2008 spike with a
+period of intensified illegal logging investigations reported by the
+Forest Department, and the 2020 spike with cyclone-related damage
+during the COVID-19 administrative window. In other words, the
+``declining trend'' is more accurately framed as ``fewer large-event
+years recently'' than as a steady reduction in deforestation
+pressure.
+
+\subsection{Where Did the Loss Occur? Spatial Carbon Hotspots}
+
+Beyond the temporal pattern, knowing \emph{where} on the archipelago
+carbon emissions occurred matters for both root-cause diagnosis and
+intervention design. Figure~\ref{fig:carbon-hotspots} maps the
+spatially-resolved CO$_2$e loss intensity by aggregating per-pixel
+losses across all study years. Two patterns dominate. First, the
+Andaman emissions are concentrated on Middle and South Andaman around
+the existing road network and settlement boundaries, with a thin
+band of high-intensity loss along the eastern coast of North Andaman
+that aligns with documented tsunami-period reconstruction sites.
+Second, the Nicobar emissions are dominated by a single contiguous
+hotspot on the south-eastern flank of Great Nicobar---a pattern
+that pre-dates the headline-grabbing 2020s development proposals and
+reflects steady, low-intensity clearing through the 2000s and 2010s.
+This spatial concentration is precisely what makes the Moran's $I$
+test return a strongly clustered signature (Section~\ref{sec:eci-results}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{carbon/carbon_loss_hotspots_map.png}
+\caption{Spatial aggregation of carbon-loss intensity (cumulative
+CO$_2$e per pixel, 2001--2024) for the Andaman (left) and Nicobar
+(right) groups. The Andaman pattern follows the road and settlement
+network; the Nicobar pattern is dominated by a single contiguous
+hotspot on south-east Great Nicobar.}
+\label{fig:carbon-hotspots}
+\end{figure}
+
+\subsection{Loss versus Gain and the Net Carbon Balance}
+
+The GFW product also reports a separate forest-\emph{gain} layer
+covering 2000--2012, which allows the loss totals to be partially
+offset by the carbon sequestered in newly regenerating canopy.
+Figure~\ref{fig:loss-vs-gain} displays both layers on the same map,
+with cumulative loss in red and cumulative gain in yellow. Three
+observations follow. (i) Loss and gain are not co-located: the loss
+pixels occur preferentially along roads and settlement edges, while
+gain pixels are scattered in deeper interior locations not currently
+under active conversion pressure. (ii) The gain area at
+\SI{5806}{\hectare} (\SI{4256}{\hectare} on the Andamans plus
+\SI{1550}{\hectare} on the Nicobars) is roughly one-third of the
+loss area at \SI{19502}{\hectare}. (iii) Gain is reported only for
+the 2000--2012 window because the GFW gain product has not been
+updated for later years, so the net-balance calculation has an
+inherent forward-bias: post-2012 regrowth that has matured into
+detectable canopy is missing from the gain side of the ledger.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{carbon/carbon_loss_vs_gain_spatial.png}
+\caption{Forest loss (red, 2001--2024) versus forest gain (yellow,
+2000--2012) for the two island groups, displayed against the
+intact-land basemap. Loss exceeds gain by a factor of approximately
+3.4. Loss and gain are spatially anticorrelated: clearing occurs on
+the road and settlement perimeter while regrowth concentrates in
+the deeper interior.}
+\label{fig:loss-vs-gain}
+\end{figure}
+
+When the gain CO$_2$e is netted against the loss CO$_2$e on an
+annual basis, the resulting net-balance time series shown in
+Figure~\ref{fig:net-balance} remains firmly negative for every
+year of the record. The cumulative net debt at end-2024 is
+approximately \SI{882}{\giga\gram} CO$_2$e once the modelled gain
+of \SI{508}{\giga\gram} is subtracted from the gross loss of
+\SI{1390}{\giga\gram}. The qualitative picture is unchanged: the
+archipelago is a net carbon source even after granting full credit
+to the GFW gain product.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{carbon/carbon_net_balance_figure.png}
+\caption{Annual net carbon balance for ANI 2001--2024 (loss minus
+gain, expressed as Gg CO$_2$e). The series is uniformly negative
+(loss-dominated) and the cumulative debt at end-2024 is
+$\approx$ 882 Gg CO$_2$e after granting full credit to the GFW
+forest-gain layer.}
+\label{fig:net-balance}
+\end{figure}
+
+\subsection{RUSLE Component Maps and Soil-Loss Distributions}
+\label{sec:rusle-results}
+
+The four RUSLE factor component maps in Figure~\ref{fig:rusle-factors}
+show that rainfall erosivity (R) is highest on the wetter northern
+Andamans (CHIRPS annual mean over \SI{3500}{\milli\metre}); soil
+erodibility (K) varies modestly along the central Andaman ridge where
+clay+silt fractions exceed 50\,\%; the slope-length-and-steepness
+factor (LS) is concentrated on the steeper Saddle Peak block and on
+the Great Nicobar interior; and the cover-management factor (C),
+plotted on a log scale, is dominated by the very low forest baseline
+($C=0.001$) with rare high-erosion cropland and bare patches glowing
+bright on the otherwise dark background.
+
+\begin{figure}[p]   % own page — figure is 4 rows tall
+\centering
+\includegraphics[height=0.88\textheight,keepaspectratio]{soil/rusle_factor_components_map.png}
+\caption{RUSLE four-factor component maps for the Andaman (left) and
+Nicobar (right) island groups. R is rainfall erosivity, K is soil
+erodibility, LS is the slope-length-and-steepness factor and C is the
+cover-management factor (plotted on a log scale so the rare
+high-erosion patches are visible against the 98\,\% tree-cover
+background).}
+\label{fig:rusle-factors}
+\end{figure}
+
+The resulting per-class soil-loss distributions span three orders of
+magnitude (Figure~\ref{fig:rusle-violin}, Table~\ref{tab:rusle-by-class}).
+Closed-canopy tree cover yields a median loss of just
+\SI{2.83}{\tonne\per\hectare\per\year}---well within the soil-formation
+rate range of \SI{1}{\tonne\per\hectare\per\year}--\SI{11}{\tonne\per\hectare\per\year} typically cited for
+tropical soils \citep{montgomery2007}---while bare/sparse surfaces
+exceed \SI{424}{\tonne\per\hectare\per\year} at the median and saturate
+the RUSLE physical ceiling of 500 at the upper tail. Mangroves
+($\sim$\SI{12.4}{\tonne\per\hectare\per\year}), wetlands
+($\sim$\SI{10.5}{\tonne\per\hectare\per\year}) and shrubland
+($\sim$\SI{33}{\tonne\per\hectare\per\year}) sit comfortably between
+forest and grassland/cropland. Built-up surfaces register zero soil
+loss because RUSLE's C-factor collapses for impervious surfaces---a
+modelling convention rather than a measurement.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth]{synthesis/stat_distribution_soil_erosion.png}
+\caption{Per-land-cover-class distributions of RUSLE annual soil loss
+on a log axis, sorted ascending by class median. Built-up was dropped
+because all values are exactly zero under RUSLE's impervious-surface
+convention; Shrubland is rendered with a dashed outline because its
+sample size ($n=99$) is too small for the violin shape to be
+statistically reliable.}
+\label{fig:rusle-violin}
+\end{figure}
+
+The aggregate RUSLE soil-loss surface itself, computed as the
+pixel-by-pixel product of all five factors and capped at the physical
+ceiling of 500 t\,ha$^{-1}$\,yr$^{-1}$, is shown in
+Figure~\ref{fig:rusle-map}. The mean island-wide soil loss is
+\SI{7.9}{\tonne\per\hectare\per\year}---comparable to the
+\SI{5}{\tonne\per\hectare\per\year}--\SI{12}{\tonne\per\hectare\per\year}
+range reported by \citet{borrelli2020} for closed-canopy tropical
+sub-regions---and the maximum reaches the 500-cap on a handful of bare
+and cropland pixels. The spatial pattern is closely tied to
+land-cover: the islands appear uniformly low-yellow over the dominant
+tree-cover background, with discrete high-erosion spots on the
+cropland fringe around Port Blair and the bare patches on Great
+Nicobar's southern slopes.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth]{soil/rusle_soil_loss_map.png}
+\caption{Pixel-level RUSLE annual soil erosion risk $A = R\cdot K\cdot
+LS\cdot C\cdot P$ for the Andaman (left) and Nicobar (right) island
+groups. The colour bar is log-scaled to reveal the three-orders-of-
+magnitude range between the protected forest background and the
+high-erosion cropland and bare patches. Island-wide mean is
+\SI{7.9}{\tonne\per\hectare\per\year}.}
+\label{fig:rusle-map}
+\end{figure}
+
+The \emph{counterfactual delta} between current soil loss and the
+all-forested baseline---the soil loss \emph{caused by} land-cover
+conversion---is what truly matters for the ecosystem-service
+accounting, and is mapped in Figure~\ref{fig:rusle-delta}. The
+spatial pattern of the delta is much sharper than the raw soil-loss
+map because the forest background contributes effectively zero to the
+delta. Hotspots in the delta map align almost perfectly with the
+land-cover-conversion footprint: the south Andaman cropland belt
+around Port Blair, the small bare patches on Great Nicobar's
+southern slopes, and scattered grassland edges throughout the
+archipelago. The total ``new'' erosion attributable to forest
+conversion sums to roughly \SI{163000}{\tonne\per\year}, of which
+74\,\% is contributed by grassland and cropland alone.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth]{soil/rusle_soil_loss_delta_map.png}
+\caption{Counterfactual delta between current RUSLE soil loss and the
+all-forested baseline. Hotspots reveal the spatial footprint of
+land-cover conversion that is currently increasing sediment yield
+relative to a fully forested landscape.}
+\label{fig:rusle-delta}
+\end{figure}
+
+A complementary horizontal bar chart in
+Figure~\ref{fig:rusle-bar} summarises the per-class totals from
+Table~\ref{tab:rusle-by-class} in a visual format: tree cover
+contributes the largest absolute total in t\,yr$^{-1}$ because its
+area is enormous (over half a million hectares), but the per-hectare
+\emph{rate} is dominated by cropland and bare/sparse classes that
+occupy a tiny fraction of the island area. This is the standard
+ecosystem-services trade-off: a small area of intensively-managed or
+unvegetated land contributes disproportionate damage on a per-pixel
+basis.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{soil/rusle_erosion_by_landcover.png}
+\caption{Aggregate RUSLE soil-loss totals per ESA WorldCover class,
+showing both the total annual sediment yield (left bars) and the
+per-hectare rate (right bars). Tree cover dominates the total
+because its area is largest; cropland and bare/sparse dominate the
+per-hectare rate.}
+\label{fig:rusle-bar}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{RUSLE soil-loss statistics by ESA WorldCover class.}
+\label{tab:rusle-by-class}
+\small
+\begin{tabular}{l r r r r r}
+\toprule
+\rowcolor{forestgreen!15}
+\textbf{Land cover} & \textbf{Area (ha)} & \textbf{Mean} & \textbf{Median} & \textbf{Max} & \textbf{Total} \\
+\rowcolor{forestgreen!15}
+                    &                   & (t/ha/yr)    & (t/ha/yr)       & (t/ha/yr)    & (t/yr)        \\
+\midrule
+Tree cover (Forest) & \num{524713} & 3.67   & 2.83   & 41.0  & \num{1927237} \\
+Mangroves           & \num{49239}  & 17.34  & 12.41  & 336.4 & \num{853674}  \\
+Grassland           & \num{13222}  & 87.12  & 56.36  & 500.0 & \num{1151794} \\
+Cropland            & \num{3561}   & 205.68 & 160.88 & 500.0 & \num{732513}  \\
+Built-up            & \num{1344}   & 0.00   & 0.00   & 0.0   & 0             \\
+Bare / sparse       & \num{414}    & 321.57 & 424.81 & 500.0 & \num{133012}  \\
+Wetland             & \num{218}    & 20.19  & 10.53  & 500.0 & \num{4402}    \\
+Shrubland           & \num{9}      & 44.34  & 33.44  & 210.2 & \num{395}     \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Habitat Quality: Spatial Maps and Cumulative Threats}
+
+The full pixel-level InVEST Habitat Quality model output is mapped in
+Figure~\ref{fig:hq-map}. The upper two panels render the habitat
+quality index $Q$ itself on a red-to-green diverging colour ramp,
+with $Q=1$ (pristine) shown in deep green and $Q=0$ (fully degraded)
+in deep red. The Andaman mean Q is 0.864 and the Nicobar mean is
+similar; both island groups appear overwhelmingly green-dominant,
+reflecting the fact that 96\,\% of the surface is closed-canopy tree
+cover or mangrove. The few red and orange pixels delineate the
+settlement-around-Port-Blair cluster, the small Nicobar urban core
+and the bare/grassland edges around clearings. The lower two panels
+render the InVEST \emph{cumulative threat layer} $D_x$ on a sequential
+red ramp; this is the proximity-weighted threat surface that
+modulates the habitat-quality output via the half-saturation function
+described in Section~\ref{sec:methods-habitat}. The cumulative threat
+surface reveals the spatial signature of the InVEST decay kernel:
+each isolated cropland or built-up pixel radiates a soft red halo
+into the surrounding forest, indicating ``forest pixels close to
+threats whose habitat suitability has been pulled down from the
+$Q=1$ baseline''. The maximum $D_x$ on the Andamans is 0.784, on the
+Nicobars somewhat lower.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{habitat/habitat_quality_index_map.png}
+\caption{InVEST habitat quality output for the Andaman \& Nicobar
+Islands (2024). Top row: the habitat quality index $Q_x$ rendered on
+a red-to-green diverging ramp. Bottom row: the cumulative
+proximity-weighted threat layer $D_x$ (roads, built-up and cropland)
+on a sequential red ramp. The halo of degraded $Q$ around each
+threat source is the spatial fingerprint of the InVEST decay kernel.}
+\label{fig:hq-map}
+\end{figure}
+
+\subsection{Habitat Quality by Land-Cover Class}
+
+The pixel-level habitat quality distributions (Figure~\ref{fig:hq-violin})
+follow the standard InVEST per-class ordering once they are sorted by
+median: Built-up sits at $Q=0$, Cropland at $Q=0.10$, Bare/Sparse at
+$Q=0.15$, Grassland at $Q=0.38$, Wetland at $Q=0.45$, Shrubland at
+$Q=0.50$, Mangroves at $Q=0.90$ and Tree Cover at $Q=1.00$. Tree Cover
+and Mangroves both show long downward tails towards $Q\approx 0.25$
+that correspond to forest pixels close to settlement edges and
+infrastructure---these are not artefacts of the violin estimator but
+real signal from the InVEST threat-weighted degradation function.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth]{synthesis/stat_distribution_habitat_quality.png}
+\caption{Per-land-cover-class distributions of the InVEST-style
+Habitat Quality Index $Q$, sorted ascending by median. Built-up sits
+exactly at $Q=0$ as a modelling convention, and Shrubland's small
+sample size ($n=318$) is flagged with a dashed outline.}
+\label{fig:hq-violin}
+\end{figure}
+
+The bivariate relationship between Habitat Quality and Soil Erosion
+(Figure~\ref{fig:hq-se-kde}) is consistent across the two largest
+classes. Tree-cover pixels cluster in the high-$Q$, low-erosion
+corner and cropland pixels cluster in the low-$Q$, moderate-erosion
+corner, with a negative log-linear relationship across all valid
+pixels ($r=-0.71$, $p<0.001$, $n=16{,}000$). The relationship is
+substantively meaningful: an increase from $Q=0.10$ to $Q=1.00$
+corresponds to a drop in mean soil loss of approximately a factor of
+55, a quantitative confirmation of the well-documented
+\citep{morgan2005} co-benefit between forest retention and soil
+retention.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{synthesis/bivariate_habitat_erosion_kde.png}
+\caption{Bivariate kernel-density-estimated scatter of pixel-level
+Habitat Quality versus annual soil erosion. Tree-cover pixels (green,
+$n=12{,}000$) and Cropland pixels (orange, $n=4{,}000$) occupy
+opposite corners; a log-linear regression yields $r=-0.71$
+($p<0.001$). Marginal density curves are rendered along the top and
+right edges.}
+\label{fig:hq-se-kde}
+\end{figure}
+
+A horizontal bar summary of mean habitat quality per ESA WorldCover
+class is shown in Figure~\ref{fig:hq-bar}. Tree cover and Mangroves
+dominate the top of the ranking with $Q$ near or at the InVEST
+ceiling of 1.0, while Built-up, Cropland and Bare-Sparse collapse
+toward zero, exactly as expected from the lookup-table baselines.
+This visual confirms the ecological ordering implied by the violin
+distributions but in a form better suited to summary tables and
+policy briefings.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{habitat/habitat_quality_by_landcover.png}
+\caption{Mean InVEST habitat quality $Q$ per ESA WorldCover class,
+displayed as a horizontal bar chart sorted descending. Tree Cover and
+Mangroves dominate the top of the ranking; Built-up, Cropland and
+Bare-Sparse occupy the bottom.}
+\label{fig:hq-bar}
+\end{figure}
+
+\subsection{Temporal Habitat-Quality Change (2000 $\rightarrow$ 2024)}
+
+The change in habitat quality between the year-2000 land-cover
+baseline and the year-2024 state---computed by re-running the InVEST
+pipeline with the historical land-cover map and differencing the
+output---is mapped in Figure~\ref{fig:hq-delta}. Two patterns are
+worth highlighting. First, the change is overwhelmingly negative:
+\SI{7960}{\hectare} of Andaman habitat and \SI{3715}{\hectare} of
+Nicobar habitat are now in a degraded state ($\Delta Q < 0$) relative
+to the year-2000 baseline, while \emph{zero} hectares register a
+positive $\Delta Q$. Second, the magnitude of the $\Delta Q$
+distribution in the right-hand histogram is striking: most of the
+degraded pixels lose between 0.0 and $-0.2$ of quality (small
+threat-halo pixels at the forest perimeter), but a heavy tail extends
+all the way to $-0.9$, corresponding to forest pixels that converted
+directly to built-up or bare surface and lost essentially all habitat
+value. The bimodal shape of the histogram---a large peak near zero
+and a smaller peak near $-0.7$---separates ``proximity degradation''
+from ``conversion degradation'' as the two distinct mechanisms by
+which habitat quality is being eroded.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\textwidth]{habitat/habitat_quality_delta_map.png}
+\caption{Temporal change in habitat quality between 2000 and 2024
+($\Delta Q$). The left two maps render the per-pixel delta on a
+diverging blue-red ramp; the right panel shows the distribution of
+$\Delta Q$ on a log pixel-count axis. No pixels improved
+(zero hectares with $\Delta Q > 0$); \SI{11675}{\hectare} are now
+degraded.}
+\label{fig:hq-delta}
+\end{figure}
+
+\subsection{Habitat-Quality Sensitivity Analysis}
+
+The InVEST half-saturation distance $D_{1/2}$ and shape parameter $k$
+control how aggressively threats decay with distance, and choosing
+them is unavoidably judgemental. Figure~\ref{fig:hq-sens} reports a
+local sensitivity analysis in which each parameter was independently
+perturbed by $\pm 50\,\%$ from its default value (default $D_{1/2}=0.5$,
+$k=2.5$), and the resulting mean $\overline{Q}$ was re-tabulated. The
+mean is reasonably insensitive to $D_{1/2}$ (it varies by only
+$\pm 0.03$ across the perturbation range) but more sensitive to $k$
+(varies by $\pm 0.05$). Crucially, the qualitative ordering of
+land-cover classes does not change under any parameter perturbation
+within the tested range---Tree Cover is always at the top, Built-up
+always at the bottom---so the synthesis conclusions about which
+classes are losing habitat are robust to parameter choice. The
+sensitivity envelope is a useful uncertainty bound on the
+\emph{absolute} mean $Q$ but does not threaten the
+\emph{relative} per-class story.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{habitat/habitat_sensitivity_analysis.png}
+\caption{Local sensitivity of the mean habitat quality $\overline{Q}$
+to the InVEST half-saturation distance $D_{1/2}$ and shape parameter
+$k$. Each parameter is perturbed independently by $\pm 50\,\%$ from
+its default. The mean varies by less than $\pm 0.05$ across the
+tested range, and the relative ranking of land-cover classes is
+preserved.}
+\label{fig:hq-sens}
+\end{figure}
+
+\subsection{Multifunctional Trade-offs Across Services}
+
+Figure~\ref{fig:radar} summarises four land-cover types on three
+ecosystem-service axes simultaneously. Tree cover dominates every
+axis (HQ 92, Carbon 100, Soil Retention 99), Mangroves are close
+behind (HQ 86, Carbon 66, Soil 97), Cropland sits in the middle on
+all three axes (HQ 10, Carbon 32, Soil 56), and Built-up shows the
+diagnostic ``narrow sliver'' shape that arises when habitat and
+carbon collapse to zero while soil retention reads as 99 simply
+because RUSLE has nothing to compute against an impervious surface.
+The four radar values are computed directly from the same rasters
+that produce the violin charts---no hand-tuned constants---so the
+synthesis is internally consistent with the rest of the report.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.66\textwidth]{synthesis/tradeoff_radar_chart.png}
+\caption{Multidimensional ecosystem-service trade-off radar for four
+representative land-cover classes. Values are normalised to the
+empirical class maxima so the maximum on each spoke is exactly 100.
+The Built-up sliver shape (HQ=0, Carbon=0, Soil=99) reveals the
+modelling convention that RUSLE has no sediment yield to compute on
+an impervious surface.}
+\label{fig:radar}
+\end{figure}
+
+\subsection{Ecosystem Collapse Index and Triple-Collapse Hotspots}
+\label{sec:eci-results}
+
+The ECI map shown in Figure~\ref{fig:eci-map} renders the multifunctional
+collapse signal directly. Hotspot density---visualised as hexbin counts
+in Figure~\ref{fig:hexbin}---is concentrated on Middle and North
+Andaman around the Saddle Peak ridge and on the southern stretch of
+Great Nicobar; the spatial pattern is strikingly clustered rather than
+uniformly distributed. The 95\textsuperscript{th}-percentile threshold
+flags \SI{2404}{\hectare} of triple-collapse pixels (\SI{2094}{\hectare}
+in the Andamans, \SI{310}{\hectare} in the Nicobars). Global Moran's
+$I$ on the habitat-quality delta raster is $0.33$
+($p=0.005$, 199 permutations, $n=2{,}260$ valid degradation cells)
+and on the RUSLE soil-loss delta raster is $0.20$
+($p=0.005$, $n=1{,}374$). The interpretation is that the spatial
+configuration of degradation is significantly different from random:
+hotspots are clustered rather than dispersed, which has direct
+implications for prioritising management interventions geographically.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{synthesis/eci_collapse_hotspots_map.png}
+\caption{Ecosystem Collapse Index (ECI) map with triple-collapse
+hotspots shown in red and the ECI value distribution shown in the
+right panel. The 95\textsuperscript{th}-percentile threshold (red
+dashed line in the histogram) demarcates the top-5\,\% of impacted
+pixels.}
+\label{fig:eci-map}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{synthesis/hotspot_hexbin_density_map.png}
+\caption{Spatial hexbin clustering of triple-collapse hotspots
+shown separately for the Andaman (left) and Nicobar (right) island
+groups, sharing a single log-scale colour bar. The largest hotspot
+density is on Middle/North Andaman near the central ridge; the
+Great Nicobar pattern is offset to the south-east.}
+\label{fig:hexbin}
+\end{figure}
+
+\subsection{Cross-Validation: GEDI L4B versus Saatchi 2011}
+\label{sec:cv-results}
+
+Figure~\ref{fig:cv} compares the two biomass products on the forest-
+restricted pixel set (\num{2314513} pairs). The headline result is
+\emph{not} a clean cross-validation: Pearson's $r$ is a modest 0.254,
+Lin's CCC essentially zero (0.0213), RMSE 168.8 Mg/ha and bias
+$+152.6$ Mg/ha---meaning that on average GEDI reports about 153 Mg/ha
+more biomass than Saatchi reports for the same forest pixel. The
+mean ratio is 3.45$\times$ and the RMA slope is 4.56. Log--log Pearson
+$r$ rises to 0.36, showing that the two products rank pixels in a
+similar relative order even though their absolute scales diverge.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\textwidth]{validation/agb_cross_validation_upgraded.png}
+\caption{Inter-product comparison of GEDI L4B versus Saatchi 2011
+biomass on the forest-restricted pixel set ($n=2{,}314{,}513$).
+The hexbin scatter (left) shows the cloud sitting well above the 1:1
+line, the overlaid histograms (centre) show GEDI's median of 216 Mg/ha
+versus Saatchi's median of 62 Mg/ha, and the metrics table (right)
+reports bootstrap 95\,\% confidence intervals on every quantity. The
+inset note clarifies that this is an inter-product comparison rather
+than a ground-truth validation.}
+\label{fig:cv}
+\end{figure}
+
+A diagnostic test that rescaled Saatchi by a factor of 2.13 (the
+literature conversion from Mg C/ha to Mg AGB/ha) closed only half of
+the bias gap, indicating that the discrepancy is not a simple
+unit-conversion error. The remaining factor reflects two well-known
+features of the Saatchi 2011 product: it was calibrated against
+GLAS-era 2003--2007 GLAS waveforms, and it was conservative on tall
+closed-canopy tropical forest \citep{mitchard2014}. The
+inter-comparison should therefore be read as evidence of
+product-level divergence, not as a validation of either product
+against ground truth.
+
+\subsection{Supplementary Ecosystem Services}
+
+The supplementary services module (Figure~\ref{fig:supp}) extends the
+biophysical accounting in four directions.
+Coastal protection: \SI{54097}{\hectare} of protective ($CPI>0.5$)
+mangrove area corresponds to an annual avoided-damage value of
+\$121.2 million using the 10\,\%-of-global Menendez willingness-to-pay
+benchmark; the 15-year discounted NPV of high-value mangrove lost
+(\SI{971}{\hectare}, $CPI>0.5$) is \$24.2 million.
+Freshwater yield: the Budyko-style P--AET partition gives
+\SI{3140}{\giga\litre\per\year} of water yield across the displayed
+classes, dominated by tree cover (2681 GL); counterfactual
+forest-to-cropland conversion would increase runoff by \SI{3574}{\giga\litre\per\year}
+but with the well-known side effect of higher flood and erosion risk.
+Pollination: the Lonsdorf $S$ index ranges from 0.76 on tree cover to
+0.00 on built-up, with cropland at 0.20; the per-hectare loss going
+from tree cover to cropland is $\Delta S = -0.565$ and
+\SI{11016}{unit\hectare} of suitability has effectively been lost
+over the deforested area to date.
+Soil organic carbon: the hybrid SoilGrids-plus-class-mean baseline
+gives a mean SOC of \SI{75.3}{\mega\gram\of\carbon\per\hectare}; a 25\,\% loss factor
+\citep{don2011} applied to the deforested pixel set gives
+\SI{365}{\kilo\tonne\of\carbon} lost, or about \SI{1341}{\giga\gram\of\carbondioxide} of CO$_2$e
+emissions on top of the aboveground budget---roughly +96\,\% of the
+main carbon-loss figure---valued at \$68.4 million at the social cost
+of carbon.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{supplementary/supplementary_services_panel.png}
+\caption{Supplementary ecosystem-service module summarising four
+additional services not part of the main carbon-soil-habitat budget:
+coastal protection (mangrove buffer index, upper-left), freshwater
+yield by land-cover class (upper-right), Lonsdorf-style pollination
+suitability (lower-left) and soil-organic-carbon loss from
+deforestation (lower-right). Together these raise the projected 2040
+economic damage from a lower-bound \$502 M to an upper-bound
+\$594 M.}
+\label{fig:supp}
+\end{figure}
+
+\subsection{Predictive Forecasting: Forest Cover to 2040}
+\label{sec:forecast-forest}
+
+Extrapolating the 2001--2023 forest-loss trajectory forward gives a
+projected additional \SI{25056}{\hectare} of deforestation by 2040
+under the business-as-usual scenario, calculated as the historical
+mean annual loss (\SI{812.6}{\hectare\per\year}) multiplied by the
+17-year forecast horizon and modulated by the Sen-slope adjustment.
+Figure~\ref{fig:forecast-forest} maps the projected loss footprint
+spatially: the new loss pixels (red) are sited preferentially along
+the existing road network and at the perimeter of current cropland
+clusters, because the underlying probabilistic land-use model
+parameterises loss probability as a function of proximity to existing
+disturbance. The total forecast loss represents an additional 12\,\%
+of the standing forest area in the affected zones and would push the
+cumulative carbon-equivalent debt past 2.3 Gg CO$_2$e by 2040 under
+BAU assumptions.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{predictive/forecast_forest_cover_2040.png}
+\caption{Projected forest-cover loss footprint for ANI by 2040 under
+the business-as-usual scenario. Historical 2001--2024 loss is shown
+in orange, projected new 2024--2040 loss in red. The new-loss
+pattern follows the existing road and settlement-edge geography
+because the underlying model treats proximity to existing disturbance
+as the dominant explanatory variable.}
+\label{fig:forecast-forest}
+\end{figure}
+
+\subsection{Three-Scenario Predictive Forest-Collapse Map}
+\label{sec:forecast-tri}
+
+To bracket the deep uncertainty in future deforestation pressure,
+three counterfactual scenarios were run forward to 2060: a
+\emph{Conservation} scenario in which the historical loss rate drops
+to $0.2\times$ its 2001--2024 mean (consistent with full enforcement
+of core-protected status), a \emph{Business-As-Usual} scenario at
+$1.0\times$, and an \emph{Escalation} scenario at $2.5\times$
+(consistent with regional infrastructure projects of the type
+announced for Great Nicobar). Figure~\ref{fig:forecast-tri} renders
+the three predicted forest-cover endings in side-by-side panels.
+The Conservation scenario adds just \SI{6630}{\hectare} of new loss
+and costs $\sim$\$248 M in cumulative damages, BAU adds
+\SI{52580}{\hectare} ($\sim$\$1{,}964 M), and Escalation adds
+\SI{80015}{\hectare} ($\sim$\$2{,}988 M)---roughly four-fold and
+twelve-fold the BAU loss respectively. The Nicobar group is
+proportionally far more vulnerable than the Andaman group under
+Escalation: Great Nicobar's forested fraction drops from $\sim$80\,\%
+to under 40\,\% in the Escalation panel, while the equivalent
+Andaman drop is only $\sim$10 percentage points.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\textwidth]{predictive/forecast_tri_scenario_2060.png}
+\caption{Three-scenario predictive forecast 2024--2060.
+(A) Conservation (0.2$\times$ historic rate, core-protected),
+(B) Business-As-Usual (1.0$\times$ historic rate), and
+(C) Escalation (2.5$\times$ historic rate). Each panel shows the
+surviving forest backdrop (faded green), the historical 2000--2024
+loss footprint (yellow) and the new projected 2024--2060 loss (red).
+Totals at the foot of each panel report the additional new loss and
+the cumulative damage cost.}
+\label{fig:forecast-tri}
+\end{figure}
+
+\subsection{Multi-Scenario Projected Economic Damages to 2060}
+
+The cumulative economic-damage trajectories for the three scenarios
+are plotted side-by-side through 2024--2060 in
+Figure~\ref{fig:forecast-econ}. Conservation asymptotes at
+\$248 M---the trajectory levels off because once the core-protected
+zone is enforced, almost no new conversion occurs and only the
+already-incurred damage accumulates. BAU continues approximately
+linearly to \$1,964 M by 2060. Escalation rises steeply to
+\$2,988 M by 2060 and shows no sign of saturating. The
+``avoided-damage band'' annotations on the figure quantify the
+implicit value of switching between scenarios: moving from
+Escalation to BAU saves \$1,024 M; moving from BAU to Conservation
+saves a further \$1,716 M; the total avoided damage of going from
+Escalation to Conservation is \$2,741 M---i.e. the maximum
+willingness-to-pay for a Conservation policy in net-present-value
+terms, against an Escalation counterfactual, is approximately
+\$2.7 billion over the 2024--2060 horizon.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\textwidth]{predictive/forecast_economic_damages_2060.png}
+\caption{Cumulative projected economic damages 2024--2060 under the
+three scenarios. Conservation (green) saturates around \$248 M, BAU
+(orange) continues linearly to \$1,964 M, Escalation (red) reaches
+\$2,988 M. Avoided-damage call-outs in the middle of the figure
+quantify the value of moving between scenarios.}
+\label{fig:forecast-econ}
+\end{figure}
+
+\subsection{Economic Damage Projection to 2040}
+
+Combining the historic deforestation velocity of
+\SI{812.6}{\hectare\per\year} with the three primary damage categories
+gives a projected 2040 business-as-usual economic damage of
+approximately \$502 million broken down as
+\$101 M carbon damage (at \$51/tCO$_2$),
+\$100 M dredging cost (sediment loss at \$5/tonne) and
+\$301 M habitat-replacement cost (\$3000/ha for the projected
+\SI{25056}{\hectare} of additional deforestation by 2040). Adding the
+supplementary coastal-protection NPV (\$24.2 M) and the SOC damage
+(\$68.4 M) raises the upper-bound total to \$594 million, an 18\,\%
+uplift over the lower bound. The 2040 figure is the natural
+midpoint of the 2060 trajectories displayed in
+Figure~\ref{fig:forecast-econ}; the underlying scenarios diverge
+sharply by then, with the Conservation case asymptotic at
+$\sim$\$500 M, BAU at around \$1.0 billion and Escalation
+approaching \$2.0 billion. These are first-order figures intended to
+bracket the order of magnitude of foregone value rather than precise
+predictions, and they are dominated by the highly uncertain
+habitat-replacement cost component.
+
+% ---- TABLE: HEADLINE NUMBERS ----------------------------------------
+\begin{table}[H]
+\centering
+\caption{Headline biophysical and economic results summarised across
+the 2001--2024 study period.}
+\label{tab:headline}
+\small
+\begin{tabular}{p{6.5cm} l}
+\toprule
+\rowcolor{forestgreen!15}
+\textbf{Quantity} & \textbf{Value (95\,\% CI where given)} \\
+\midrule
+Total forest loss (2001--2023)        & \SI{19502}{\hectare} (12351--27826) \\
+Total CO$_2$e loss                    & \SI{1390}{\giga\gram} (936--1887) \\
+Mann--Kendall trend $Z$ (CO$_2$e)     & $-2.51$ ($p=0.012$, decreasing) \\
+Sen slope (CO$_2$e)                   & $-2.67$ Gg/yr ($-5.25$ to $-0.66$) \\
+Mann--Kendall trend $Z$ (area)        & $-3.35$ ($p=0.0008$, decreasing) \\
+Sen slope (area)                      & $-54.1$ ha/yr ($-83.8$ to $-20.4$) \\
+\addlinespace
+RUSLE median, Tree Cover              & \SI{2.83}{\tonne\per\hectare\per\year} \\
+RUSLE median, Bare/Sparse             & \SI{424.81}{\tonne\per\hectare\per\year} \\
+RUSLE median, Cropland                & \SI{160.88}{\tonne\per\hectare\per\year} \\
+\addlinespace
+Habitat Quality (Tree Cover)          & median 1.00 \\
+Habitat Quality (Mangroves)           & median 0.90 \\
+Habitat Quality (Cropland)            & median 0.10 \\
+\addlinespace
+ECI critical hotspot area (Andamans)  & \SI{2094}{\hectare} \\
+ECI critical hotspot area (Nicobars)  & \SI{310}{\hectare} \\
+Moran's $I$ (habitat $\Delta$)        & 0.33 ($p=0.005$, $n=2260$) \\
+Moran's $I$ (RUSLE $\Delta$)          & 0.20 ($p=0.005$, $n=1374$) \\
+\addlinespace
+GEDI vs Saatchi Pearson $r$           & 0.254 (0.250--0.259) \\
+GEDI vs Saatchi Lin CCC               & 0.0213 (0.021--0.022) \\
+GEDI vs Saatchi RMSE                  & 168.76 Mg/ha (168.45--169.11) \\
+GEDI vs Saatchi bias                  & $+152.59$ Mg/ha \\
+\addlinespace
+Economic damage 2040 (lower bound)    & \$501.8 M \\
+Economic damage 2040 (upper bound)    & \$594.4 M ($+18\,\%$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =====================================================================
+% 4. ACKNOWLEDGEMENTS
+% =====================================================================
+\section{Acknowledgements}
+
+This work uses freely-available remote-sensing data and would not have
+been possible without the institutions and missions listed in
+Section~\ref{sec:data}. In particular the ESA WorldCover Consortium,
+NASA's Global Ecosystem Dynamics Investigation (GEDI) team, the
+University of Maryland and World Resources Institute Global Forest
+Watch partnership, the UCSB Climate Hazards Center (CHIRPS), the
+ISRIC SoilGrids project and the USGS/NASA SRTM mission are all
+gratefully acknowledged for the open data they produce. The Saatchi
+pan-tropical biomass map distributed under the NASA Earthdata licence
+was used as an independent cross-validation reference. The Survey of
+India administrative boundary shapefile was used to delimit the study
+area. Python, NumPy, SciPy, matplotlib, pandas, rasterio and
+GeoPandas underpinned every analytical step, and I thank their
+respective open-source communities. Any errors of interpretation are
+mine alone.
+
+% =====================================================================
+% 5. REFERENCES
+% =====================================================================
+\section{References}
+\renewcommand{\refname}{}      % hide thebibliography's auto-heading
+\vspace{-2.2em}
+\begin{thebibliography}{99}
+\setlength{\itemsep}{2pt}
+
+\bibitem[Anselin(1995)]{anselin1995}
+Anselin, L. (1995).
+Local Indicators of Spatial Association---LISA.
+\textit{Geographical Analysis}, 27(2), 93--115.
+
+\bibitem[Borrelli et al.(2020)]{borrelli2020}
+Borrelli, P., Robinson, D.A., Panagos, P., et al. (2020).
+Land use and climate change impacts on global soil erosion by water
+(2015--2070).
+\textit{Proceedings of the National Academy of Sciences}, 117(36),
+21994--22001.
+
+\bibitem[Don et al.(2011)]{don2011}
+Don, A., Schumacher, J., \& Freibauer, A. (2011).
+Impact of tropical land-use change on soil organic carbon stocks---a
+meta-analysis.
+\textit{Global Change Biology}, 17(4), 1658--1670.
+
+\bibitem[Donato et al.(2011)]{donato2011}
+Donato, D.C., Kauffman, J.B., Murdiyarso, D., Kurnianto, S.,
+Stidham, M., \& Kanninen, M. (2011).
+Mangroves among the most carbon-rich forests in the tropics.
+\textit{Nature Geoscience}, 4, 293--297.
+
+\bibitem[Dubayah et al.(2020)]{dubayah2020}
+Dubayah, R., Blair, J.B., Goetz, S., et al. (2020).
+The Global Ecosystem Dynamics Investigation: high-resolution laser
+ranging of the Earth's forests and topography.
+\textit{Science of Remote Sensing}, 1, 100002.
+
+\bibitem[Dubayah et al.(2022)]{dubayah2022}
+Dubayah, R., Armston, J., Kellner, J.R., et al. (2022).
+GEDI L4A Footprint Level Aboveground Biomass Density, Version 2.1.
+ORNL DAAC, Oak Ridge, Tennessee, USA.
+
+\bibitem[Efron \& Tibshirani(1993)]{efron1993}
+Efron, B. \& Tibshirani, R.J. (1993).
+\textit{An Introduction to the Bootstrap}.
+Chapman \& Hall/CRC.
+
+\bibitem[Egoh et al.(2008)]{egoh2008}
+Egoh, B., Reyers, B., Rouget, M., et al. (2008).
+Mapping ecosystem services for planning and management.
+\textit{Agriculture, Ecosystems \& Environment}, 127(1--2), 135--140.
+
+\bibitem[EPA(2023)]{epa2023}
+United States Environmental Protection Agency (2023).
+EPA Report on the Social Cost of Greenhouse Gases: Estimates
+Incorporating Recent Scientific Advances. EPA, Washington DC.
+
+\bibitem[Hansen et al.(2013)]{hansen2013}
+Hansen, M.C., Potapov, P.V., Moore, R., et al. (2013).
+High-Resolution Global Maps of 21st-Century Forest Cover Change.
+\textit{Science}, 342, 850--853.
+
+\bibitem[Harris et al.(2021)]{harris2021}
+Harris, N.L., Gibbs, D.A., Baccini, A., et al. (2021).
+Global maps of twenty-first century forest carbon fluxes.
+\textit{Nature Climate Change}, 11, 234--240.
+
+\bibitem[Kendall(1975)]{kendall1975}
+Kendall, M.G. (1975).
+\textit{Rank Correlation Methods}. Griffin, London.
+
+\bibitem[Koh et al.(2016)]{koh2016}
+Koh, I., Lonsdorf, E.V., Williams, N.M., et al. (2016).
+Modeling the status, trends, and impacts of wild bee abundance in the
+United States.
+\textit{Proceedings of the National Academy of Sciences}, 113(1),
+140--145.
+
+\bibitem[Lin(1989)]{lin1989}
+Lin, L.I. (1989).
+A concordance correlation coefficient to evaluate reproducibility.
+\textit{Biometrics}, 45(1), 255--268.
+
+\bibitem[Mann(1945)]{mann1945}
+Mann, H.B. (1945).
+Nonparametric tests against trend.
+\textit{Econometrica}, 13(3), 245--259.
+
+\bibitem[Menendez et al.(2020)]{menendez2020}
+Menendez, P., Losada, I.J., Torres-Ortega, S., Narayan, S., \&
+Beck, M.W. (2020).
+The global flood-protection benefits of mangroves.
+\textit{Scientific Reports}, 10, 4404.
+
+\bibitem[Mitchard et al.(2014)]{mitchard2014}
+Mitchard, E.T.A., Saatchi, S.S., Baccini, A., et al. (2014).
+Markedly divergent estimates of Amazon forest carbon density from
+ground plots and satellites.
+\textit{Global Ecology and Biogeography}, 23, 935--946.
+
+\bibitem[Montgomery(2007)]{montgomery2007}
+Montgomery, D.R. (2007).
+Soil erosion and agricultural sustainability.
+\textit{Proceedings of the National Academy of Sciences}, 104(33),
+13268--13272.
+
+\bibitem[Moore et al.(1992)]{moore1992}
+Moore, I.D., Grayson, R.B., \& Ladson, A.R. (1991).
+Digital terrain modelling: a review of hydrological, geomorphological
+and biological applications.
+\textit{Hydrological Processes}, 5, 3--30.
+
+\bibitem[Moran(1950)]{moran1950}
+Moran, P.A.P. (1950).
+Notes on continuous stochastic phenomena.
+\textit{Biometrika}, 37(1--2), 17--23.
+
+\bibitem[Morgan(2005)]{morgan2005}
+Morgan, R.P.C. (2005).
+\textit{Soil Erosion and Conservation}, 3rd ed.
+Blackwell Publishing.
+
+\bibitem[Nelson et al.(2009)]{nelson2009}
+Nelson, E., Mendoza, G., Regetz, J., et al. (2009).
+Modeling multiple ecosystem services, biodiversity conservation,
+commodity production, and tradeoffs at landscape scales.
+\textit{Frontiers in Ecology and the Environment}, 7(1), 4--11.
+
+\bibitem[Panagos et al.(2015)]{panagos2015}
+Panagos, P., Borrelli, P., Poesen, J., et al. (2015).
+The new assessment of soil loss by water erosion in Europe.
+\textit{Environmental Science \& Policy}, 54, 438--447.
+
+\bibitem[Powers et al.(2018)]{powers2018}
+Powers, J.S., Corre, M.D., Twine, T.E., \& Veldkamp, E. (2018).
+Geographic bias of field observations of soil carbon stocks with
+tropical land-use changes precludes spatial extrapolation.
+\textit{Proceedings of the National Academy of Sciences}, 108(15),
+6318--6322.
+
+\bibitem[Rao et al.(2018)]{rao2018}
+Rao, N.D., Min, J., DeFries, R., et al. (2018).
+Ecosystem-service bundles and their spatial determinants.
+\textit{Ecosystem Services}, 30, 102--113.
+
+\bibitem[Renard et al.(1997)]{renard1997}
+Renard, K.G., Foster, G.R., Weesies, G.A., et al. (1997).
+\textit{Predicting Soil Erosion by Water: A Guide to Conservation
+Planning with the Revised Universal Soil Loss Equation (RUSLE)}.
+USDA Agriculture Handbook 703.
+
+\bibitem[Saatchi et al.(2011)]{saatchi2011}
+Saatchi, S.S., Harris, N.L., Brown, S., et al. (2011).
+Benchmark map of forest carbon stocks in tropical regions across
+three continents.
+\textit{Proceedings of the National Academy of Sciences}, 108(24),
+9899--9904.
+
+\bibitem[Sen(1968)]{sen1968}
+Sen, P.K. (1968).
+Estimates of the regression coefficient based on Kendall's tau.
+\textit{Journal of the American Statistical Association}, 63,
+1379--1389.
+
+\bibitem[Sharp et al.(2020)]{sharp2020}
+Sharp, R., Tallis, H.T., Ricketts, T., et al. (2020).
+\textit{InVEST 3.9.0 User's Guide}.
+The Natural Capital Project, Stanford University.
+
+\bibitem[Sun et al.(2006)]{sun2006}
+Sun, G., Zhou, G., Zhang, Z., et al. (2006).
+Potential water yield reduction due to forestation across China.
+\textit{Journal of Hydrology}, 328(3--4), 548--558.
+
+\bibitem[Terrado et al.(2016)]{terrado2016}
+Terrado, M., Sabater, S., Chaplin-Kramer, B., et al. (2016).
+Model development for the assessment of terrestrial and aquatic
+habitat quality in conservation planning.
+\textit{Science of the Total Environment}, 540, 63--70.
+
+\bibitem[Theil(1950)]{theil1950}
+Theil, H. (1950).
+A rank-invariant method of linear and polynomial regression
+analysis.
+\textit{Proceedings of the Royal Netherlands Academy of Sciences},
+53, 386--392.
+
+\bibitem[Warton et al.(2006)]{warton2006}
+Warton, D.I., Wright, I.J., Falster, D.S., \& Westoby, M. (2006).
+Bivariate line-fitting methods for allometry.
+\textit{Biological Reviews}, 81(2), 259--291.
+
+\bibitem[Westlake(1963)]{westlake1963}
+Westlake, D.F. (1963).
+Comparisons of plant productivity.
+\textit{Biological Reviews}, 38, 385--425.
+
+\bibitem[Wischmeier \& Smith(1978)]{wischmeier1978}
+Wischmeier, W.H. \& Smith, D.D. (1978).
+\textit{Predicting Rainfall Erosion Losses---A Guide to Conservation
+Planning}. USDA Agriculture Handbook 537.
+
+\bibitem[Zhang et al.(2001)]{zhang2001}
+Zhang, L., Dawes, W.R., \& Walker, G.R. (2001).
+Response of mean annual evapotranspiration to vegetation changes at
+catchment scale.
+\textit{Water Resources Research}, 37(3), 701--708.
+
+\end{thebibliography}
+
+% =====================================================================
+% APPENDIX
+% =====================================================================
+\appendix
+
+\section{Code and Data Layout}
+
+The project is organised under a single working directory with three
+main top-level folders: \texttt{data/} (raw and processed
+GeoTIFFs), \texttt{results/} (CSV outputs and intermediate rasters)
+and \texttt{figures/} (publication-ready PNGs grouped by analytical
+theme). The analysis pipeline is implemented in Python 3.11 with
+NumPy, SciPy, pandas, matplotlib, rasterio and GeoPandas. The
+ordered execution sequence is: (1) \texttt{src/carbon\_analysis.py}
+to build the GEDI biomass baseline and the annual carbon-loss CSV;
+(2) \texttt{src/soil\_retention.py} to compute the four RUSLE factor
+rasters, the annual soil-loss raster and the per-class summary CSV;
+(3) \texttt{src/habitat\_quality.py} for the InVEST-style
+habitat-quality index and its per-class summary; (4)
+\texttt{src/synthesis\_hotspots.py} for the ECI raster and the
+top-5\,\% hotspot mask; (5)
+\texttt{src/supplementary\_services.py} for the four supplementary
+modules and the updated economic upper bound; (6)
+\texttt{src/validation\_stats.py} for the Mann--Kendall, Theil--Sen,
+bootstrap cross-validation and Moran's $I$ tests; and (7) the
+\texttt{src/render\_synthesis\_light.py} and other rendering scripts
+to produce the publication figures embedded in this report.
+
+\section{Reproducibility}
+
+All scripts are deterministic given the same input rasters and the
+NumPy random seed 42 used throughout. The validation summary JSON
+(\texttt{results/validation\_summary.json}) and the flat-CSV summary
+(\texttt{results/validation\_metrics.csv}) record every numeric
+quantity reported in this document.
+
+\end{document}

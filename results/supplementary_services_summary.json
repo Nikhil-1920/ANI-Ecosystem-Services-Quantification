@@ -1,0 +1,37 @@
+{
+  "coastal_protection": {
+    "mangrove_area_ha": 59038.47,
+    "protective_area_ha": 54096.57,
+    "high_value_area_ha": 40902.659999999996,
+    "mangrove_lost_ha": 1136.79,
+    "high_value_lost_ha": 970.56,
+    "annual_protection_value_usd": 121176316.8,
+    "npv_value_lost_usd": 24171979.117809817
+  },
+  "freshwater_yield": {
+    "total_yield_GL": 3140.419677734375,
+    "incremental_yield_if_converted_GL": 3574.350848
+  },
+  "pollination": {
+    "mean_S": 0.7388856410980225,
+    "forest_S": 0.7648529270389178,
+    "crop_S": 0.2,
+    "delta_per_ha": 0.5648529270389178,
+    "deforested_ha": 19502.28,
+    "pollination_units_lost": 11015.919941932545
+  },
+  "soc_loss": {
+    "mean_baseline_Mg_per_ha": 75.30158996582031,
+    "deforested_px": 216692,
+    "soc_lost_Mg_C": 365616.5,
+    "co2e_lost_Gg": 1340.5938333333334,
+    "soc_damage_usd": 68370285.5
+  },
+  "economic": {
+    "main_usd": 501827580.22,
+    "coastal_usd": 24171979.117809817,
+    "soc_usd": 68370285.5,
+    "upper_usd": 594369844.8378098,
+    "pct_increase": 18.441047934678974
+  }
+}

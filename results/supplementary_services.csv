@@ -1,0 +1,18 @@
+module,metric,value
+Coastal protection,Total mangrove area (ha),"59,038"
+Coastal protection,Protective mangrove (CPI > 0.5) (ha),"54,097"
+Coastal protection,Mangrove lost (ha),"1,137"
+Coastal protection,Annual protection value (USD),"121,176,317"
+Coastal protection,15-yr NPV of value lost (USD),"24,171,979"
+Freshwater yield,Total water yield (GL/yr),"3,140.4"
+Freshwater yield,Forest→Cropland incremental yield (GL/yr),"3,574.4"
+Pollination,Mean ANI suitability S,0.739
+Pollination,Forest→Cropland ΔS per ha,-0.565
+Pollination,Total suitability lost (unit-ha),"11,016"
+SOC,Mean baseline SOC (Mg C/ha),75.3
+SOC,Total SOC lost (Mg C),"365,616"
+SOC,Equivalent CO2e (Gg),"1,340.6"
+SOC,Economic damage @ SCC (USD),"68,370,286"
+Economic,"Main report damage (lower bound, USD)","501,827,580"
+Economic,"Upper-bound damage (with all services, USD)","594,369,845"
+Economic,Uplift over lower bound (%),+18%
